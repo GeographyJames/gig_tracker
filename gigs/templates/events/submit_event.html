@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h1>{% block title %}Submit Event{% endblock %}</h1>
+<br>
+<form action="{% url 'submit_event' %}" method="post">
+    <div class="input-group mb-3">
+        {{ form.headline_act }}
+    </div>
+    <div class="input-group mb-3">
+        {{ form.venue }}
+        <a href="{% url 'add_venue' %}" class="btn btn-outline-secondary" type="button" >Add venue</a>
+    </div>
+    <div class="input-group mb-3">
+        {{ form.event_type }}
+    </div>
+    <div class="input-group mb-3">
+        {{ form.date }}
+    </div>
+    <div class="form-group mb-3">
+        {{ form.status.label }}
+        {{ form.status }}
+    </div>
+    {% csrf_token %}
+    <p><button type="submit" class="btn btn-primary">Submit</button></p>
+
+</form>
+{% endblock %}
