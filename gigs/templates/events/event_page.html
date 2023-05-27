@@ -1,5 +1,10 @@
 {% extends "base.html" %}
 
 {% block content %}
-<h1>{% block title %}{{ event.headline_act }}{% endblock %}</h1>
+<h1>{% block title %}{{ event.headline_act }} at {{ event.venue }} on {{ event.date }}{% endblock %}</h1>
+<br>
+<p>Event type: {{ event.event_type }}</p>
+<p>Status: {{ event.status }}</p>
+<p>Ticket price: {{ event.ticket_price }}</p>
+
 {% endblock %}

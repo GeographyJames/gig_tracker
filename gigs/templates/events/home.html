@@ -6,10 +6,9 @@
 <h2>{{ month }}</h2>
 {% for event in events %}
         <a href="{{ event.get_absolute_url }}">
-            {{ event.headline_act }} - {{ event.venue.name }}:</a> {{ event.text_date }}<br>
+            {{ event.headline_act }} - {{ event.venue.name }}: {{ event.text_date }}</a><br>
 {% endfor %}
 <br>
 {% endfor %}
 
-<p><strong><a href="{% url 'submit_event' %}">add event</a></strong></p>
 {% endblock %}
