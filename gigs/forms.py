@@ -21,6 +21,7 @@ class SubmitEvent(forms.ModelForm):
         self.fields['status'].widget.attrs['class'] = 'form-select'
 
         self.fields['venue'].widget.attrs['class'] = 'form-select'
+        self.fields['venue'].empty_label='Select venue'
 
 
 class AddVenue(forms.ModelForm):

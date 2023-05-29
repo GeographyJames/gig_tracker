@@ -1,22 +1,56 @@
-<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-    <div class="container-fluid">
-        <a class="navbar-brand" href="{% url 'home' %}">Events</a>
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
-        </button>
+<nav class="navbar navbar-expand-lg bg-body-tertiary">
+  <div class="container-fluid">
+    <a class="navbar-brand" href="{% url 'home' %}">Events</a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+        <li class="nav-item">
+          
+          <a class="nav-link" aria-current="page"
+          {% if request.user.is_authenticated %}
+            href="{% url 'submit_event' %}"
+            {% else %} 
+            data-bs-toggle="modal" data-bs-target="#please_login_or_register" href="#"
+          {% endif %}>
+          Add event
+        </a>
+        </li>
+        {% if request.user.is_authenticated %}
+        <li class="nav-item dropdown ">
+        <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown">{{ request.user.username }}</a>
+    <ul>
+        <ul class="dropdown-menu">
+            <li><a class="dropdown-item" href="{% url 'logout' %}" >Logout</a></li>
+            <li><a class="dropdown-item" href="{% url 'password_change' %}">Change password</a></li>
+          </ul>
+    </li>
+        {% else %}
+        <li class="nav-item">
+        <a class="nav-link" href="{% url 'login' %}" >login</a>
+        </li>
 
-        <div class="collapse navbar-collapse" id="navbarNav">
-            <ul class="navbar-nav">
-              <li class="nav-item">
-                <a class="nav-link" aria-current="page" href="{% url 'submit_event' %}">Add event</a>
-              </li>
-            </ul>
-        </div>
-   
+        {% endif %}
 
+        </li>
         
-   
 
+      </ul>
 
     </div>
+  </div>
 </nav>
+
+
+<!-- Modal -->
+<div class="modal fade" id="please_login_or_register" tabindex="-1" aria-labelledby="please_login_or_register" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <p class="modal-title fs-5">Please <a href="{% url 'submit_event' %}">login</a> or <a href="{% url 'register' %}">register</a> to add an event.</p>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+    </div>
+  </div>
+</div>
