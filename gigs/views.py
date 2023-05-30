@@ -26,6 +26,11 @@ def home(request):
         events = Event.objects.filter(date__year=date.year, date__month=date.month)
         for event in events:
             event.text_date=custom_strftime('%a {S} %B', event.date)
+            if event.date.weekday() in [4,5]:
+                event.fri_or_sat = True
+            else:
+                event.fri_or_sat = False
+
         events_by_month[date.strftime("%b %Y")] = events
 
     return render(request, 'events/home.html', {
