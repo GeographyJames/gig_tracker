@@ -11,17 +11,24 @@
     <title>{% block title %}{% endblock %}</title>
 </head>
 <body>
+    
     {% include 'navbar.html' %}
+    <br>
+    <div class="col-md-10 offset-md-1">
     {% if messages %}
-        {% for message in messages %}
-            <div class="alert alert-{% if message.tags %}{{ message.tags }}{% endif %}" role="alert">
-                {{ message|safe }}
-            </div>
-        {% endfor %}
-    {% endif %}
+    {% for message in messages %}
+        <div class="alert alert-{% if message.tags %}{{ message.tags }}{% endif %}" role="alert">
+            {{ message|safe }}
+        </div>
+    {% endfor %}
+{% endif %}
+    </div>
+
             
     <div class="col-md-6 offset-md-3">
         <div class="container">
+
+
             <br>
             {% block content %}
             {% endblock %}

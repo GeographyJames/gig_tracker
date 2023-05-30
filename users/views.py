@@ -1,8 +1,9 @@
 from django.shortcuts import render, redirect
 from django.http import HttpResponse
 from django.contrib import messages
+from django.contrib.auth.views import LoginView
 from django.contrib.auth import authenticate, login, logout
-from .forms import RegisterForm
+from .forms import RegisterForm, LoginForm
 
 def dashboard(request):
     return HttpResponse('user dashboard')
@@ -26,3 +27,6 @@ def register(request):
             messages.warning(request, 'Registration failed.')
 
     return render(request, 'registration/register.html', {'form': form})
+
+class UserLoginView(LoginView):
+    authentication_form = LoginForm

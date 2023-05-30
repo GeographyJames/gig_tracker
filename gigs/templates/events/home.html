@@ -2,6 +2,7 @@
 
 {% block content %}
 <h1>{% block title %}Events{% endblock %}</h1>
+<p>Events in bold are on Fridays and Saturdays.</p>
 {% for month, events in events_by_month.items %}
 <h2>{{ month }}</h2>
 {% for event in events %}

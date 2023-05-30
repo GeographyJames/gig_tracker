@@ -48,9 +48,12 @@
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
-        <p class="modal-title fs-5">Please <a href="{% url 'submit_event' %}">login</a> or <a href="{% url 'register' %}">register</a> to add an event.</p>
+        <h5 class="modal-title">Add event</h5>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
+      <div class="modal-body">
+      <p>Please <a href="{% url 'submit_event' %}">login</a> or <a href="{% url 'register' %}">register</a> to add an event.</p>
+    </div>
     </div>
   </div>
 </div>
