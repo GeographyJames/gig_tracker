@@ -1,13 +1,13 @@
-from django.contrib.auth.forms import UserCreationForm, UsernameField, AuthenticationForm
+import django.contrib.auth.forms as auth_forms
 from django.contrib.auth.models import User
 from django import forms
 
-class RegisterForm(UserCreationForm):
+class RegisterForm(auth_forms.UserCreationForm):
 
     class Meta:
         model = User
         fields = ("username", 'first_name', 'last_name', 'email')
-        field_classes = {"username": UsernameField}
+        field_classes = {"username": auth_forms.UsernameField}
     
     def clean_email(self):
         data = self.cleaned_data['email']
@@ -45,10 +45,10 @@ class RegisterForm(UserCreationForm):
         self.fields['password2'].widget.attrs['class'] = 'form-control'
         self.fields['password2'].widget.attrs['placeholder'] = 'confirm password'
 
-class LoginForm(AuthenticationForm):
+class AuthenticationFormCustomised(auth_forms.AuthenticationForm):
 
     def __init__(self, *args, **kwargs):
-        super(LoginForm, self).__init__(*args, **kwargs)
+        super(AuthenticationFormCustomised, self).__init__(*args, **kwargs)
        
         self.fields['username'].label = ''
         self.fields['username'].widget.attrs['class'] = 'form-control'
@@ -57,3 +57,24 @@ class LoginForm(AuthenticationForm):
         self.fields['password'].label = ''
         self.fields['password'].widget.attrs['class'] = 'form-control'
         self.fields['password'].widget.attrs['placeholder'] = 'password'
+
+class PasswordResetFormCustomised(auth_forms.PasswordResetForm):
+    def __init__(self, *args, **kwargs):
+        super(PasswordResetFormCustomised, self).__init__(*args, **kwargs)
+
+        self.fields['email'].label = ''
+        self.fields['email'].widget.attrs['class'] = 'form-control'
+        self.fields['email'].widget.attrs['placeholder'] = 'email'
+
+class SetPasswordFormCustomised(auth_forms.SetPasswordForm):
+    def __init__(self, *args, **kwargs):
+        super(SetPasswordFormCustomised, self).__init__(*args, **kwargs)
+
+        self.fields['new_password1'].label = ''
+        self.fields['new_password1'].widget.attrs['class'] = 'form-control'
+        self.fields['new_password1'].widget.attrs['placeholder'] = 'new password'
+
+        self.fields['new_password2'].label = ''
+        self.fields['new_password2'].widget.attrs['class'] = 'form-control'
+        self.fields['new_password2'].widget.attrs['placeholder'] = 'confirm password'
+
