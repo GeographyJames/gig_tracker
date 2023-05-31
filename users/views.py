@@ -1,8 +1,8 @@
 from django.shortcuts import render, redirect
 from django.http import HttpResponse
 from django.contrib import messages
-from django.contrib.auth.views import LoginView, PasswordResetView, PasswordResetConfirmView
-from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth.views import LoginView, PasswordResetView, PasswordResetConfirmView, PasswordChangeView
+from django.contrib.auth import login, logout
 from . import forms
 
 def dashboard(request):
@@ -29,9 +29,10 @@ def register(request):
 
     return render(request, 'registration/register.html', {'form': form})
 
-class LoginViewCustomised(LoginView):
-    authentication_form = forms.AuthenticationFormCustomised
+LoginView.form_class = forms.AuthenticationFormCustomised
 
 PasswordResetView.form_class = forms.PasswordResetFormCustomised
 
 PasswordResetConfirmView.form_class = forms.SetPasswordFormCustomised
+
+PasswordChangeView.form_class = forms.PasswordChangeFormCustomised
