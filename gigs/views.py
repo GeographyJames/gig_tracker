@@ -6,6 +6,7 @@ from django.contrib import messages
 from django.utils.text import slugify
 import pandas as pd
 import datetime
+from django.contrib.auth.decorators import login_required
 
 def suffix(d):
     return 'th' if 11<=d<=13 else {1:'st',2:'nd',3:'rd'}.get(d%10, 'th')
@@ -32,9 +33,11 @@ def home(request):
 
         events_by_month[date.strftime("%b %Y")] = events
 
-    return render(request, 'events/home.html', {'events_by_month': events_by_month})
+    return render(request, 'events/home.html', {
+        'events_by_month': events_by_month,
+        })
 
-
+@login_required
 def submit_event(request):
     if request.method != 'POST':
         form = SubmitEvent()
