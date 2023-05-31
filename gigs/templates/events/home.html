@@ -9,7 +9,11 @@
         <a
         href="{{ event.get_absolute_url }}"
         class="{% if event.fri_or_sat %}fri_or_sat{% else %}not_fri_or_sat{% endif %}">
-            {{ event.headline_act }} - {{ event.venue.name }}: {{ event.text_date }}</a><br>
+            {{ event.headline_act }} - {{ event.venue.name }}: {{ event.text_date }} {% if event.ticket_price_text %}
+                ({{ event.ticket_price_text }})
+                {% else %}
+                (£{{ event.ticket_price }})
+                {% endif %}</a><br>
 {% endfor %}
 <br>
 {% endfor %}

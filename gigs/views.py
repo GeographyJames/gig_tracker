@@ -8,6 +8,14 @@ import pandas as pd
 import datetime
 from django.contrib.auth.decorators import login_required
 
+def event_price(event):
+    if event.ticket_price == 0:
+        event.ticket_price_text = 'Free'
+    elif event.ticket_price == None:
+        event.ticket_price_text = 'unknown'
+    else:
+        event.ticket_price_text = None
+
 def suffix(d):
     return 'th' if 11<=d<=13 else {1:'st',2:'nd',3:'rd'}.get(d%10, 'th')
 
@@ -26,6 +34,7 @@ def home(request):
         events = Event.objects.filter(date__year=date.year, date__month=date.month)
         for event in events:
             event.text_date=custom_strftime('%a {S} %B', event.date)
+            event_price(event)
             if event.date.weekday() in [4,5]:
                 event.fri_or_sat = True
             else:
@@ -45,6 +54,7 @@ def submit_event(request):
     if request.method == 'POST':
         form = SubmitEvent(data=request.POST)
         if form.is_valid():
+            print(type(form.cleaned_data['ticket_price']), form.cleaned_data['ticket_price'])
             event = form.save(commit=False)
             event.slug = event.create_slug()
             existing_event = Event.objects.filter(
@@ -54,6 +64,7 @@ def submit_event(request):
             if existing_event:
                 messages.warning(request, f"There is already an event with {event.headline_act} at {event.venue} on {custom_strftime('%a {S} %B %Y', event.date)} in the database.")
             else:
+
                 event.save()
                 messages.success(request, f"<strong>{event.headline_act}</strong> at <strong>{event.venue}</strong> on <strong>{custom_strftime('%a {S} %B %Y', event.date)}</strong> added to database.")
                 return redirect('home')
@@ -65,9 +76,11 @@ def event_page(request, slug):
         Event,
         slug=slug
         )
+    event_price(event)
 
-    return render (request, 'events/event_page.html', {'event': event})
+    return render(request, 'events/event_page.html', {'event': event})
 
+@login_required
 def add_venue(request):
     if request.method != 'POST':
         form = AddVenue()
@@ -86,5 +99,12 @@ def add_venue(request):
                 messages.success(request, f"<strong>{venue.name}</strong> added to database.")
                 return redirect('submit_event')
 
-
     return render(request, 'events/add_venue.html', {'form': form})
+
+@login_required
+def update_event(request, slug):
+    event = get_object_or_404(
+    Event,
+    slug=slug
+    )
+    return render(request, 'events/update_event.html', {})
