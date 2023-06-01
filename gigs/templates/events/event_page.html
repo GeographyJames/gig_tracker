@@ -16,20 +16,20 @@
 <p><a {% if request.user.is_authenticated %}
     href="{{ event.update_event_url }}"
     {% else %} 
-    data-bs-toggle="modal" data-bs-target="#please_login_or_register" href="#"
+    data-bs-toggle="modal" data-bs-target="#please_login_or_register2" href="#"
   {% endif %}>Update event details.</a></p>
 
 
 <!-- Modal -->
-<div class="modal fade" id="please_login_or_register" tabindex="-1" aria-labelledby="please_login_or_register" aria-hidden="true">
+<div class="modal fade" id="please_login_or_register2" tabindex="-1" aria-labelledby="please_login_or_register" aria-hidden="true">
     <div class="modal-dialog">
       <div class="modal-content">
         <div class="modal-header">
-          <h5 class="modal-title">Add event</h5>
+          <h5 class="modal-title">Update event</h5>
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
         <div class="modal-body">
-        <p>Please <a href="{{ event.update_event_url }}">login</a> or <a href="{% url 'register' %}">register</a> update the event details.</p>
+        <p>Please <a href="{{ event.update_event_url }}">login</a> or <a href="{% url 'register' %}">register</a> to update the event details.</p>
       </div>
       </div>
     </div>
