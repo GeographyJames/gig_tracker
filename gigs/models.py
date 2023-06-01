@@ -35,7 +35,8 @@ class Event(models.Model):
         ('sold out', 'sold out'),
         ('cancelled', 'cancelled'),
         ('postponed', 'postponed'),
-        
+        ('rescheduled', 'rescheduled'),
+        ('change of venue', 'change of venue'),
     ]
 
     event_type =  models.CharField(max_length=50, choices=event_types, default='gig')
@@ -66,3 +67,6 @@ class Event(models.Model):
         
     def get_absolute_url(self):
         return reverse('event_page', args=[self.slug])
+    
+    def update_event_url(self):
+        return reverse('update_event', args=[self.slug])
