@@ -11,6 +11,14 @@
     {% else %}
     £{{ event.ticket_price }}
     {% endif %}</p>
+<p>Promoter: {% if event.promoter %}
+  {{ event.promoter }}
+  {% else %}
+  unknown
+  {% endif %}
+  
+  <p><button type="button" class="btn btn-primary"  data-bs-toggle="modal" data-bs-target="#remove_event">Remove Event</button></p>
+
 
 
 <p><a {% if request.user.is_authenticated %}
@@ -29,10 +37,35 @@
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
         <div class="modal-body">
-        <p>Please <a href="{{ event.update_event_url }}">login</a> or <a href="{% url 'register' %}">register</a> to update the event details.</p>
+        <p>Please <a href="{% url 'login' %}">login</a> or <a href="{% url 'register' %}">register</a> to update the event details.</p>
       </div>
       </div>
     </div>
   </div>
+
+<!-- Modal -->
+<div class="modal fade" id="remove_event" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Remove event</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        {% if request.user == event.user %}
+
+        <p>Are you sure you want to remove this event?</p>
+        <div class="modal-footer">
+          <a href="{{ event.remove_event_url }}"><button type="button"  class="btn btn-primary">Confirm</button></a>
+        </div>
+        {% else %}
+        Only the user that submitted the event may remove it from the database. If you submitted the event, please login and try again.
+
+        {% endif %}
+      </div>
+    </div>
+    </div>
+  </div>
+</div>
 
     {% endblock %}

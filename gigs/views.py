@@ -8,19 +8,6 @@ import pandas as pd
 import datetime
 from django.contrib.auth.decorators import login_required
 
-def event_price(event):
-    if event.ticket_price == 0:
-        event.ticket_price_text = 'Free'
-    elif event.ticket_price == None:
-        event.ticket_price_text = 'unknown'
-    else:
-        event.ticket_price_text = None
-
-def suffix(d):
-    return 'th' if 11<=d<=13 else {1:'st',2:'nd',3:'rd'}.get(d%10, 'th')
-
-def custom_strftime(format, t):
-    return t.strftime(format).replace('{S}', str(t.day) + suffix(t.day))
 
 def home(request):
 
@@ -32,14 +19,6 @@ def home(request):
     events_by_month = {}
     for date in date_range:
         events = Event.objects.filter(date__year=date.year, date__month=date.month)
-        for event in events:
-            event.text_date=custom_strftime('%a {S} %B', event.date)
-            event_price(event)
-            if event.date.weekday() in [4,5]:
-                event.fri_or_sat = True
-            else:
-                event.fri_or_sat = False
-
         events_by_month[date.strftime("%b %Y")] = events
 
     return render(request, 'events/home.html', {
@@ -56,17 +35,22 @@ def submit_event(request):
         if form.is_valid():
             print(type(form.cleaned_data['ticket_price']), form.cleaned_data['ticket_price'])
             event = form.save(commit=False)
+            event.user = request.user
             event.slug = event.create_slug()
             existing_event = Event.objects.filter(
                 date=event.date,
                 slug=event.slug
                 )
             if existing_event:
-                messages.warning(request, f"There is already an event with {event.headline_act} at {event.venue} on {custom_strftime('%a {S} %B %Y', event.date)} in the database.")
+                messages.warning(
+                    request,
+                    f"There is already an event with {event.headline_act} at {event.venue} on {event.text_date()} in the database.")
             else:
 
                 event.save()
-                messages.success(request, f"<strong>{event.headline_act}</strong> at <strong>{event.venue}</strong> on <strong>{custom_strftime('%a {S} %B %Y', event.date)}</strong> added to database.")
+                messages.success(
+                    request,
+                    f"<strong>{event.headline_act}</strong> at <strong>{event.venue}</strong> on <strong>{event.text_date()}</strong> added to database.")
                 return redirect('home')
 
     return render(request, 'events/submit_event.html', {'form': form})
@@ -76,7 +60,6 @@ def event_page(request, slug):
         Event,
         slug=slug
         )
-    event_price(event)
 
     return render(request, 'events/event_page.html', {'event': event})
 
@@ -93,7 +76,10 @@ def add_venue(request):
             existing_venue = Venue.objects.filter(slug=venue.slug)
             if existing_venue:
                 print(existing_venue)
-                messages.warning(request, f"You tried to add <strong>{venue.name}</strong> but there is already a venue called <strong>{existing_venue[0].name}</strong> in the database. These names are too similar.")
+                messages.warning(
+                    request,
+                    f"You tried to add <strong>{venue.name}</strong> but there is already a venue called <strong>{existing_venue[0].name}</strong> in the database. These names are too similar."
+                    )
             else:
                 venue.save()
                 messages.success(request, f"<strong>{venue.name}</strong> added to database.")
@@ -108,3 +94,20 @@ def update_event(request, slug):
     slug=slug
     )
     return render(request, 'events/update_event.html', {})
+
+@login_required
+def remove_event(request, slug):
+    event = get_object_or_404(Event, slug=slug)
+    if request.user == event.user:
+        event.delete()
+        messages.success(
+            request,
+            f"<strong>{event.headline_act}</strong> at <strong>{event.venue}</strong> on <strong>{event.text_date()}</strong> removed from the database."
+            )
+    else: messages.warning(request, 'Only the user that submitted the event may remove it.')
+    return redirect ('home')
+
+@login_required
+def my_events(request):
+    my_events = Event.objects.filter(user=request.user)    
+    return render(request, 'events/my_events.html', {'events': my_events})
