@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h1>{% block title %}My events{% endblock %}</h1>
+<br>
+<p>Events you have submitted to the database.</p>
+{% for event in events %}
+<a  href="{{ event.get_absolute_url }}">
+{{ event.headline_act }} - {{ event.venue.name }}: {{ event.text_date }}
+<br>
+</a>
+{% endfor %}
+{% endblock %}

@@ -5,7 +5,7 @@ class SubmitEvent(forms.ModelForm):
 
     class Meta:
         model = Event
-        fields = ['headline_act', 'venue', 'event_type', 'date', 'status', 'ticket_price']
+        fields = ['headline_act', 'venue', 'event_type', 'date', 'status', 'ticket_price', 'promoter']
 
     def __init__(self, *args, **kwargs):
         super(SubmitEvent, self).__init__(*args, **kwargs)
@@ -25,6 +25,10 @@ class SubmitEvent(forms.ModelForm):
 
         self.fields['ticket_price'].widget.attrs['class'] = 'form-select'
         self.fields['ticket_price'].label = 'Ticket price face value (excluding booking fee)'
+
+        self.fields['promoter'].widget.attrs['class'] = 'form-control'
+        self.fields['promoter'].widget.attrs['placeholder'] = 'promoter'
+
 
 class AddVenue(forms.ModelForm):
     class Meta:
