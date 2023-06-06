@@ -25,11 +25,11 @@ SECRET_KEY = 'django-insecure-961q=fc%4t$xm=2)i@1#n-*c=th0e4axbvglm%a@go3v$0on0f
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-#ALLOWED_HOSTS = [
-#    'geographyjames.eu.pythonanywhere.com',
-#    'www.gigtracker.co.uk',
-#    '127.0.0.1'
-#    ]
+ALLOWED_HOSTS = [
+    'geographyjames.eu.pythonanywhere.com',
+    'www.gigtracker.co.uk',
+    '127.0.0.1'
+    ]
 
 
 # Application definition
