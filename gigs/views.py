@@ -7,14 +7,16 @@ from django.utils.text import slugify
 import pandas as pd
 import datetime
 from django.contrib.auth.decorators import login_required
+from django.core.exceptions import ObjectDoesNotExist
 
 
 def home(request):
-
-    date_range = pd.date_range(
-        start = datetime.date.today().strftime('%Y-%m'),
-        end = Event.objects.latest('date').date.strftime('%Y-%m'),
-        freq='MS')
+    start = datetime.date.today().strftime('%Y-%m')
+    try:
+        end = Event.objects.latest('date').date.strftime('%Y-%m')
+    except ObjectDoesNotExist:
+        end = datetime.date.today().strftime('%Y-%m')
+    date_range = pd.date_range(start, end, freq='MS')
 
     events_by_month = {}
     for date in date_range:
