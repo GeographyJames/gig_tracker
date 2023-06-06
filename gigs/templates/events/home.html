@@ -1,5 +1,9 @@
 {% extends "base.html" %}
 
+{% block head %}
+<style>.fri_or_sat{font-weight: bold;}</style>
+{% endblock %}
+
 {% block content %}
 <h1>{% block title %}Events{% endblock %}</h1>
 <p>Events in bold are on Fridays and Saturdays.</p>
