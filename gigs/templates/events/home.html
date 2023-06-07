@@ -1,18 +1,33 @@
 {% extends "base.html" %}
 
 {% block head %}
-<style>.fri_or_sat{font-weight: bold;}</style>
+<style>
+    .fri_or_sat{font-weight: bold;}
+    .sold_out{color: red;}
+    .cancelled{color: gray; text-decoration: line-through;}
+    .changed{color: gray}
+
+</style>
 {% endblock %}
 
 {% block content %}
 <h1>{% block title %}Events{% endblock %}</h1>
-<p>Events in bold are on Fridays and Saturdays.</p>
+<ul>
+<li><span class="fri_or_sat">Bold:</span> Event on Friday or Saturday.</li>
+<li><span class="sold_out">Red:</span> Sold out.</li>
+<li><span class="changed">Gray:</span> Event postponed, rescheduled or venue changed.</li>
+<li><span class="cancelled">Gray strikethrough:</span> Cancelled.</li>
+</ul>
 {% for month, events in events_by_month.items %}
 <h2>{{ month }}</h2>
 {% for event in events %}
         <a
         href="{{ event.get_absolute_url }}"
-        class="{% if event.fri_or_sat %}fri_or_sat{% else %}not_fri_or_sat{% endif %}">
+        class="
+        {% if event.fri_or_sat %}fri_or_sat{% endif %}
+        {% if event.status == 'sold out' %}sold_out
+        {% elif event.status == 'cancelled' %}cancelled
+        {% elif event.status in event_status_list %}changed{% endif %}">
             {{ event.headline_act }} - {{ event.venue.name }}: {{ event.text_date }} {% if event.ticket_price_text == 'Free' %}
                 ({{ event.ticket_price_text }})
                 {% elif event.ticket_price_text == 'unknown' %}

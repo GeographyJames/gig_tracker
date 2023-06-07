@@ -23,8 +23,10 @@ def home(request):
         events = Event.objects.filter(date__year=date.year, date__month=date.month)
         events_by_month[date.strftime("%b %Y")] = events
 
+    event_status_list = ['rescheduled', 'postponed', 'change of venue']
     return render(request, 'events/home.html', {
         'events_by_month': events_by_month,
+        'event_status_list': event_status_list
         })
 
 @login_required
