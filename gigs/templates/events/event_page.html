@@ -16,16 +16,17 @@
   {% else %}
   unknown
   {% endif %}
-  
-  <p><button type="button" class="btn btn-primary"  data-bs-toggle="modal" data-bs-target="#remove_event">Remove Event</button></p>
+  <p>
+  <a {% if request.user.is_authenticated %}
+  href="{{ event.update_event_url }}"
+  {% else %} 
+  data-bs-toggle="modal" data-bs-target="#please_login_or_register2" href="#"
+{% endif %}><button type="button" class="btn btn-primary">Update event details</button></a>
+  <button type="button" class="btn btn-primary"  data-bs-toggle="modal" data-bs-target="#remove_event">Remove Event</button>
+  </p>
 
 
 
-<p><a {% if request.user.is_authenticated %}
-    href="{{ event.update_event_url }}"
-    {% else %} 
-    data-bs-toggle="modal" data-bs-target="#please_login_or_register2" href="#"
-  {% endif %}>Update event details.</a></p>
 
 
 <!-- Modal -->

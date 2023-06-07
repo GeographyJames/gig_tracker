@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.http import Http404
 from .models import Event, Venue
-from .forms import SubmitEvent, AddVenue
+from .forms import SubmitEvent, AddVenue, UpdateEvent
 from django.contrib import messages
 from django.utils.text import slugify
 import pandas as pd
@@ -23,8 +23,10 @@ def home(request):
         events = Event.objects.filter(date__year=date.year, date__month=date.month)
         events_by_month[date.strftime("%b %Y")] = events
 
+    event_status_list = ['rescheduled', 'postponed', 'change of venue']
     return render(request, 'events/home.html', {
         'events_by_month': events_by_month,
+        'event_status_list': event_status_list
         })
 
 @login_required
@@ -91,11 +93,21 @@ def add_venue(request):
 
 @login_required
 def update_event(request, slug):
-    event = get_object_or_404(
-    Event,
-    slug=slug
-    )
-    return render(request, 'events/update_event.html', {})
+    
+    event = get_object_or_404(Event, slug=slug)
+    
+    if request.method == 'POST':
+        form = UpdateEvent(request.POST, instance=event)
+        if form.is_valid():
+            form.save(commit=True)
+            messages.success(request, 'Event details updated.')
+        else:
+            messages.warning(request, 'Update failed, form invalid')
+        return redirect(event.get_absolute_url())
+    
+    form = UpdateEvent(instance=event)
+    
+    return render(request, 'events/update_event.html', {'form': form, 'event': event})
 
 @login_required
 def remove_event(request, slug):

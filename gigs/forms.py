@@ -45,3 +45,18 @@ class AddVenue(forms.ModelForm):
         self.fields['location'].widget.attrs['class'] = 'form-select'
         self.fields['location'].label = ''
 
+class UpdateEvent(forms.ModelForm):
+    class Meta:
+        model = Event
+        fields = ['status', 'ticket_price', 'promoter']
+
+    def __init__(self, *args, **kwargs):
+        super(UpdateEvent, self).__init__(*args, **kwargs)
+
+        self.fields['status'].widget.attrs['class'] = 'form-select'
+
+        self.fields['ticket_price'].widget.attrs['class'] = 'form-select'
+        self.fields['ticket_price'].label = 'Ticket price face value (excluding booking fee)'
+
+        self.fields['promoter'].widget.attrs['class'] = 'form-control'
+        self.fields['promoter'].widget.attrs['placeholder'] = 'promoter'
