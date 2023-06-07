@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.http import Http404
 from .models import Event, Venue
-from .forms import SubmitEvent, AddVenue
+from .forms import SubmitEvent, AddVenue, UpdateEvent
 from django.contrib import messages
 from django.utils.text import slugify
 import pandas as pd
@@ -91,11 +91,21 @@ def add_venue(request):
 
 @login_required
 def update_event(request, slug):
-    event = get_object_or_404(
-    Event,
-    slug=slug
-    )
-    return render(request, 'events/update_event.html', {})
+    
+    event = get_object_or_404(Event, slug=slug)
+    
+    if request.method == 'POST':
+        form = UpdateEvent(request.POST, instance=event)
+        if form.is_valid():
+            form.save(commit=True)
+            messages.success(request, 'Event details updated.')
+        else:
+            messages.warning(request, 'Update failed, form invalid')
+        return redirect(event.get_absolute_url())
+    
+    form = UpdateEvent(instance=event)
+    
+    return render(request, 'events/update_event.html', {'form': form, 'event': event})
 
 @login_required
 def remove_event(request, slug):
